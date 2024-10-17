@@ -1,5 +1,5 @@
 import re
-import PyPDF2
+import pypdf
 from fastapi import APIRouter, UploadFile, File, Body
 from typing import List
 from pydantic import BaseModel
@@ -21,7 +21,7 @@ async def process_file(files: List[UploadFile] = File(...)):
         all_text = ""
         for file in files:
             # 创建PDF阅读器对象
-            pdf_reader = PyPDF2.PdfReader(file.file)
+            pdf_reader = pypdf.PdfReader(file.file)
             # 初始化文本变量
             text = ""
             # 遍历所有页面并提取文本
