@@ -78,6 +78,6 @@ uvicorn main:app --reload # 后端
 [issues-shield]: https://img.shields.io/github/issues/Chal1ce/AutoPodcast.svg?style=flat-square
 [issues-url]: https://img.shields.io/github/issues/Chal1ce/AutoPodcast.svg
 [license-shield]: https://img.shields.io/github/license/Chal1ce/AutoPodcast.svg?style=flat-square
-[license-url]: https://github.com/Chal1ce/AutoPodcast/blob/master/LICENSE.txt
+[license-url]: https://github.com/Chal1ce/AutoPodcast/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/shaojintian
