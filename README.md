@@ -13,8 +13,14 @@
 - 若有其他需要可自行在后端进行修改。
 
 **待开发**
-TTS接入本地模型
-对话生成接入本地模型
+
+- TTS接入本地模型
+- 对话生成接入本地模型
+- 适配多种类型的文件
+
+**优化中**
+
+- 文件处理
 
 ## 开始
 **运行项目:**
@@ -82,5 +88,3 @@ uvicorn main:app --reload # 后端
 [issues-url]: https://img.shields.io/github/issues/Chal1ce/AutoPodcast.svg
 [license-shield]: https://img.shields.io/github/license/Chal1ce/AutoPodcast.svg?style=flat-square
 [license-url]: https://github.com/Chal1ce/AutoPodcast/blob/master/LICENSE
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/shaojintian
