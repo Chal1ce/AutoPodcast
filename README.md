@@ -28,6 +28,7 @@
 ⚠️ 首次运行项目前，需要在命令行或终端中输入以下命令：
 ```bash
 npm install
+pip install -r requirements.txt
 ```
 
 - 然后输入以下命令启动项目前端：
