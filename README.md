@@ -87,4 +87,4 @@ uvicorn main:app --reload # 后端
 [issues-shield]: https://img.shields.io/github/issues/Chal1ce/AutoPodcast.svg?style=flat-square
 [issues-url]: https://img.shields.io/github/issues/Chal1ce/AutoPodcast.svg
 [license-shield]: https://img.shields.io/github/license/Chal1ce/AutoPodcast.svg?style=flat-square
-[license-url]: https://github.com/Chal1ce/AutoPodcast/blob/master/LICENSE
+[license-url]: https://github.com/Chal1ce/AutoPodcast/blob/main/LICENSE
