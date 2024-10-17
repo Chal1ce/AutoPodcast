@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px; /* 减小全局字体大小 */
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-3 py-1.5 rounded text-sm font-medium transition-colors duration-200 ease-in-out;
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--foreground);
+    box-sizing: border-box;
+  }
+
+  .btn:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+
+  .btn-selected {
+    background-color: var(--primary);
+    color: var(--background);
+    border-color: var(--primary);
+  }
+
+  .btn-selected:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .container {
+    @apply max-w-6xl mx-auto px-6 sm:px-8 md:px-12;
+  }
+
+  .textarea {
+    @apply w-full p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] text-sm;
+  }
+
+  .button-group {
+    @apply mt-4 flex flex-wrap gap-2 justify-center;
+  }
+
+  .audio-player {
+    @apply mt-6 w-full;
+  }
+}
