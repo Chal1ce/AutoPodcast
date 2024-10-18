@@ -68,4 +68,12 @@ body {
   .audio-player {
     @apply mt-6 w-full;
   }
+
+  .select-box {
+    @apply w-1/2 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-transparent text-sm h-[38px];
+  }
+
+  .model-select-label {
+    @apply text-xs text-gray-600 mb-1;
+  }
 }

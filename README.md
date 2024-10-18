@@ -4,7 +4,6 @@
 
 </div>
 
----
 <!-- PROJECT SHIELDS -->
 <div align="center">
 

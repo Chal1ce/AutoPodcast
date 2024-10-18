@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from './button';
 import ResponseDisplay from './ResponseDisplay';
 
-const GenerateDialog = ({ topic, format }) => {
+const GenerateDialog = ({ topic, format, isLocalMode, model }) => {
   const [generatedText, setGeneratedText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,7 +16,9 @@ const GenerateDialog = ({ topic, format }) => {
       const requestBody = JSON.stringify({ topic, format });
       console.log("发送的请求体:", requestBody);
 
-      const response = await fetch(`${apiUrl}/deepseek/topic2talk`, {
+      // 根据isLocalMode和model选择合适的接口
+      const endpoint = isLocalMode ? `local/${model}` : model;
+      const response = await fetch(`${apiUrl}/${endpoint}/topic2talk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: requestBody,
