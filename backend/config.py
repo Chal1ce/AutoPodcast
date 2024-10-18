@@ -51,8 +51,8 @@ class llama:
     model: str = 'meta-llama/Llama-3.2-1B'
 
 @dataclass
-class Qwen:
-    model: str = 'Qwen/Qwen2-7B-Chat'
+class qwen:
+    model: str = 'Qwen/Qwen2.5-0.5B-Instruct-GPTQ-Int4'
 
 @dataclass
 class yi:
