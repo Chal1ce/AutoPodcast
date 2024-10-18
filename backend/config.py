@@ -21,7 +21,30 @@ class ReechoModel:
     stability_boost: Optional[int] = 256 # 稳定性过滤 (0-1024，默认为256)
     stream: Optional[bool] = False # 是否启用流式生成（默认为false）
 
+
+@dataclass
+class CoquiTTS:
+    model: str = 'tts_models/multilingual/multi-dataset/xtts_v2'
+    output_path: str = 'output.wav'
+    speaker_wav: str = 'audio.wav'
+    language: str = 'zh-cn'
+
+
 @dataclass
 class DeepSeekModel:
     model: str = 'deepseek-chat'
     apikey: str = ''
+
+@dataclass
+class llama:
+    model: str = 'meta-llama/Llama-3.2-1B'
+
+@dataclass
+class Qwen:
+    model: str = 'Qwen/Qwen2-7B-Chat'
+
+@dataclass
+class Yi:
+    model: str = 'Yi/Yi-3-8B'
+    apikey: str = ''
+
