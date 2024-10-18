@@ -1,10 +1,16 @@
+<div align="center">
+
 # AutoPodcast - 一个简易的AI播客生成器
 
+</div>
+
+---
 <!-- PROJECT SHIELDS -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![License][license-shield]][license-url]
+<div align="center">
+
+[![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![License][license-shield]][license-url]
+
+</div>
 <!-- PROJECT LOGO -->
 
 - TTS转换接入了`Reecho`的API。
