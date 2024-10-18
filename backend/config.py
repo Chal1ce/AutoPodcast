@@ -22,19 +22,30 @@ class ReechoModel:
     stream: Optional[bool] = False # 是否启用流式生成（默认为false）
 
 
-@dataclass
-class CoquiTTS:
-    model: str = 'tts_models/multilingual/multi-dataset/xtts_v2'
-    output_path: str = 'output.wav'
-    speaker_wav: str = 'audio.wav'
-    language: str = 'zh-cn'
 
-
+# ------------------
+# api
+# ------------------
 @dataclass
-class DeepSeekModel:
+class DeepSeek_API:
     model: str = 'deepseek-chat'
     apikey: str = ''
 
+@dataclass
+class Yi_API:
+    model: str = 'Yi/Yi-3-8B'
+    apikey: str = ''
+
+@dataclass
+class OpenAI_API:
+    model: str = 'gpt-4o'
+    apikey: str = ''
+    base_url: str = 'https://api.openai.com/v1'
+
+
+# ------------------
+# local model
+# ------------------
 @dataclass
 class llama:
     model: str = 'meta-llama/Llama-3.2-1B'
@@ -44,7 +55,12 @@ class Qwen:
     model: str = 'Qwen/Qwen2-7B-Chat'
 
 @dataclass
-class Yi:
+class yi:
     model: str = 'Yi/Yi-3-8B'
-    apikey: str = ''
 
+@dataclass
+class CoquiTTS:
+    model: str = 'tts_models/multilingual/multi-dataset/xtts_v2'
+    output_path: str = 'output.wav'
+    speaker_wav: str = 'audio.wav'
+    language: str = 'zh-cn'
