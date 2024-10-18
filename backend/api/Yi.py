@@ -1,16 +1,16 @@
 from openai import OpenAI
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response, StreamingResponse
-from config import DeepSeek_API
+from config import Yi_API
 from pydantic import BaseModel
 
-deepseek_model = DeepSeek_API()
+yi_model = Yi_API()
 
-deepseek_router = APIRouter()
+yi_router = APIRouter()
 
 client = OpenAI(
-    base_url="https://api.deepseek.com/v1",
-    api_key=deepseek_model.apikey
+    base_url="https://api.lingyiwanwu.com/v1",
+    api_key=yi_model.apikey
 )
 
 
@@ -19,8 +19,8 @@ class File2TalkRequest(BaseModel):
     text: str
     characters: str
 
-@deepseek_router.post("/file2talk")
-async def deepseek_file2talk(request_data: File2TalkRequest):
+@yi_router.post("/file2talk")
+async def yi_file2talk(request_data: File2TalkRequest):
     text = request_data.text
     characters = request_data.characters
 
@@ -36,7 +36,7 @@ async def deepseek_file2talk(request_data: File2TalkRequest):
     try:
         final_res = []
         res = client.chat.completions.create(
-            model=deepseek_model.model,
+            model=yi_model.model,
             messages=[
                 {"role": "system", "content": sys_prompt},
                 {"role": "user", "content": "内容: " + text}
@@ -59,8 +59,8 @@ class TopicTalkRequest(BaseModel):
     topic: str
     format: str
 
-@deepseek_router.post("/topic2talk")
-async def deepseek_topic2talk(request_data: TopicTalkRequest):
+@yi_router.post("/topic2talk")
+async def yi_topic2talk(request_data: TopicTalkRequest):
     print(f"Received request data: {request_data}")
     characters = request_data.format
     topic = request_data.topic
@@ -89,7 +89,7 @@ async def deepseek_topic2talk(request_data: TopicTalkRequest):
 
 def generate_res(sys_prompt, topic):
     response = client.chat.completions.create(
-        model=deepseek_model.model,
+        model=yi_model.model,
         messages=[
             {"role": "system", "content": sys_prompt},
             {"role": "user", "content": "主题: "+topic}
