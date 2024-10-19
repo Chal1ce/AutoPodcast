@@ -44,7 +44,8 @@ async def deepseek_file2talk(request_data: File2TalkRequest):
             stream=False
         )
         print(f"Response: {res.choices[0].message.content}")
-        res = res.choices[0].message.content.split("\n\n")
+        res = res.choices[0].message.content.replace("\n\n", "\n")
+        res = res.split("\n")
         for r in res:
             speaker, content = r.split(":")
             final_res.append({"speaker": speaker, "content": content})
@@ -78,7 +79,8 @@ async def deepseek_topic2talk(request_data: TopicTalkRequest):
     try:
         final_res = []
         res = generate_res(sys_prompt, topic)
-        res = res.split("\n\n")
+        res = res.replace("\n\n", "\n")
+        res = res.split("\n")
         for r in res:
             speaker, content = r.split(":")
             final_res.append({"speaker": speaker, "content": content})
