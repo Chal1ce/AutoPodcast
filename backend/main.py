@@ -18,7 +18,7 @@ app.include_router(deepseek_router, prefix="/deepseek", tags=["deepseek"])
 app.include_router(openai_router, prefix="/openai", tags=["openai"])
 app.include_router(yi_router, prefix="/yi", tags=["yi"])
 
-# app.include_router(llama_router, prefix="/llama", tags=["llama"])
+# app.include_router(llama_router, prefix="/llama_local", tags=["llama_local"])
 # app.include_router(yi_local_router, prefix="/yi_local", tags=["yi_local"])
 app.include_router(coqui_tts_router, prefix="/coqui_tts", tags=["coqui_tts"])
 

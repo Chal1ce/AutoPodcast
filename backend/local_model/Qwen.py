@@ -1,5 +1,5 @@
 from config import qwen
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -56,4 +56,15 @@ def generate_response(request_data: File2TalkRequest):
         output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
     ]
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-    return response
+
+    try:
+        final_res = []
+        res = response.replace("\n\n", "\n")
+        res = res.split("\n")
+        for r in res:
+            speaker, content = r.split(":")
+            final_res.append({"speaker": speaker, "content": content})
+        return final_res
+    except Exception as e:
+        print(f"Error in generate_res: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

@@ -62,6 +62,10 @@ export default function Home() {
     }
   };
 
+  const getModelEndpoint = (model, isLocal) => {
+    return isLocal ? `${model}_local` : model;
+  };
+
   return (
     <div className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="max-w-md mx-auto space-y-8">
@@ -115,8 +119,7 @@ export default function Home() {
                 format={format} 
                 setGeneratedText={setGeneratedText}
                 setIsLoading={setIsLoading}
-                isLocalMode={modelMode === 'local'}
-                model={selectedModel}
+                model={getModelEndpoint(selectedModel, modelMode === 'local')}
               />
               <ResponseDisplay 
                 generatedText={generatedText}
@@ -127,7 +130,11 @@ export default function Home() {
             </>
           )}
           
-          {selectedOption === 'file' && <FileUpload />}
+          {selectedOption === 'file' && 
+            <FileUpload 
+              model={getModelEndpoint(selectedModel, modelMode === 'local')}
+            />
+          }
         </div>
       </main>
     </div>

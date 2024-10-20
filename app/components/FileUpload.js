@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 
-export default function FileUpload() {
+export default function FileUpload({ model }) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -79,16 +79,18 @@ export default function FileUpload() {
         throw new Error('处理失败');
       }
     } catch (error) {
-      setError('文件处理失败，请重试。');
+      setError('文件处理失败，重试。');
       setProcessingStatus("处理失败"); // 设置失败状态
       setButtonState("idle"); // 重置按钮状态
       setTimeout(() => setError(""), 5000);
     }
   };
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
   const sendProcessedTextAndRole = async (text, characters) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/deepseek/file2talk', {
+      const response = await fetch(`${apiUrl}/${model}/file2talk`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +105,7 @@ export default function FileUpload() {
       const result = await response.json();
       console.log(result);
       setGeneratedDialog(result);
-      setEditableDialog(result); // 初始化可编辑对话
+      setEditableDialog(result);
       setProcessingStatus("对话生成成功");
     } catch (error) {
       console.error('发送处理后的文本和角色时出错:', error);

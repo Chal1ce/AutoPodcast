@@ -3,7 +3,7 @@ anyio==4.6.2.post1
 certifi==2024.8.30
 charset-normalizer==3.4.0
 click==8.1.7
-coqui_tts==0.24.2
+coqui_tts
 colorama==0.4.6
 distro==1.9.0
 exceptiongroup==1.2.2

@@ -1,5 +1,5 @@
 from config import yi
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -44,4 +44,14 @@ async def yi_generate(request_data: File2TalkRequest):
     output_ids = model.generate(input_ids.to('cuda'), eos_token_id=tokenizer.eos_token_id)
     response = tokenizer.decode(output_ids[0][input_ids.shape[1]:], skip_special_tokens=True)
 
-    return response
+    try:
+        final_res = []
+        res = response.replace("\n\n", "\n")
+        res = res.split("\n")
+        for r in res:
+            speaker, content = r.split(":")
+            final_res.append({"speaker": speaker, "content": content})
+        return final_res
+    except Exception as e:
+        print(f"Error in generate_res: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from './button';
 import ResponseDisplay from './ResponseDisplay';
 
-const GenerateDialog = ({ topic, format, isLocalMode, model }) => {
+const GenerateDialog = ({ topic, format, model }) => {
   const [generatedText, setGeneratedText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,9 +16,7 @@ const GenerateDialog = ({ topic, format, isLocalMode, model }) => {
       const requestBody = JSON.stringify({ topic, format });
       console.log("发送的请求体:", requestBody);
 
-      // 根据isLocalMode和model选择合适的接口
-      const endpoint = isLocalMode ? `local/${model}` : model;
-      const response = await fetch(`${apiUrl}/${endpoint}/topic2talk`, {
+      const response = await fetch(`${apiUrl}/${model}/topic2talk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: requestBody,
@@ -31,7 +29,6 @@ const GenerateDialog = ({ topic, format, isLocalMode, model }) => {
       const data = await response.json();
       console.log("收到响应:", data);
       
-      // 直接使用后端返回的数据，不需要额外处理
       setGeneratedText(data);
     } catch (error) {
       console.error("生成脚本时出错:", error);
