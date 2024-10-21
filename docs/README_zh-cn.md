@@ -62,7 +62,7 @@ uvicorn main:app --reload # 后端
 
 - reecho 语音角色id获取：
 
-![reecho](./public/imgs/5.png)
+![reecho](../public/imgs/5.png)
 
 ### 对于本地模式
 您需要将要克隆的语音角色音频文件放置在`backend`文件夹下，例如我在`backend`文件夹下放置了`test.wav`，那么我就可以在配置config.py的时候，`speaker_wav`就选择`test.wav`。
@@ -75,17 +75,17 @@ uvicorn main:app --reload # 后端
 ### 前端
 
 **根据文件生成播客**
-![1](./public/imgs/1.png)
+![1](../public/imgs/1.png)
 
 生成的文本可自行修改后确认，确认之后会发送到reecho进行TTS转换，转换完成之后可以进行播放和下载
-![2](./public/imgs/2.png)
+![2](../public/imgs/2.png)
 
 **根据主题生成播客**
-![3](./public/imgs/3.png)
+![3](../public/imgs/3.png)
 
 
 ### 后端
-![后端页面](./public/imgs/4.png)
+![后端页面](../public/imgs/4.png)
 
 <!-- links -->
 [your-project-path]:Chal1ce/AutoPodcast
