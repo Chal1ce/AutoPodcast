@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef } from "react";
+import ToggleButton from './ToggleButton';
 
-export default function FileUpload({ model }) {
+export default function FileUpload({ model, initialTtsModelMode, initialSelectedTtsModel }) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -131,7 +132,16 @@ export default function FileUpload({ model }) {
     
     setIsSending(true);
     try {
-      const response = await fetch('http://127.0.0.1:8000/reecho/reecho', {
+      let url;
+      if (ttsModelMode === 'api' && selectedTtsModel === 'reecho') {
+        url = `${apiUrl}/reecho/reecho`;
+      } else if (ttsModelMode === 'local' && selectedTtsModel === 'coquitts') {
+        url = `${apiUrl}/coqui_tts/tts_to_file`;
+      } else {
+        throw new Error('不支持的 TTS 模式或模型');
+      }
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,11 +153,15 @@ export default function FileUpload({ model }) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('后端响应:', result);
+      let newAudioUrl;
+      if (ttsModelMode === 'api') {
+        const result = await response.json();
+        newAudioUrl = result; // Reecho API 直接返回音频 URL
+      } else {
+        // 对于 CoquiTTS，直接使用响应 URL
+        newAudioUrl = URL.createObjectURL(await response.blob());
+      }
       
-      // 直接使用后端返回的 audio_url
-      const newAudioUrl = result;
       console.log('音频URL:', newAudioUrl);
       setAudioUrl(newAudioUrl);
 
@@ -169,7 +183,7 @@ export default function FileUpload({ model }) {
     if (audioUrl) {
       const link = document.createElement('a');
       link.href = audioUrl;
-      link.download = '对话音频.mp3';
+      link.download = '对话音频.wav'; // 改为 .wav 扩展名
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -187,6 +201,28 @@ export default function FileUpload({ model }) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const ttsModelModeOptions = [
+    { value: 'api', label: 'API' },
+    { value: 'local', label: '本地' }
+  ];
+
+  const ttsModelOptions = {
+    api: [{ value: 'reecho', label: 'Reecho' }],
+    local: [{ value: 'coquitts', label: 'CoquiTTS' }]
+  };
+
+  const [ttsModelMode, setTtsModelMode] = useState(initialTtsModelMode);
+  const [selectedTtsModel, setSelectedTtsModel] = useState(initialSelectedTtsModel);
+
+  const handleTtsModelModeChange = (mode) => {
+    setTtsModelMode(mode);
+    setSelectedTtsModel(ttsModelOptions[mode][0].value);
+  };
+
+  const handleTtsModelChange = (model) => {
+    setSelectedTtsModel(model);
   };
 
   return (
@@ -243,6 +279,26 @@ export default function FileUpload({ model }) {
           <option value="一个主持人，一个嘉宾，一个专家">一个主持人，一个嘉宾，一个专家</option>
           <option value="一个主持人，两位专家">一个主持人，两位专家</option>
         </select>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+        <div>
+          <span className="model-select-label">TTS 模式</span>
+          <ToggleButton
+            options={ttsModelModeOptions}
+            selectedOption={ttsModelMode}
+            onSelect={handleTtsModelModeChange}
+          />
+        </div>
+        
+        <div>
+          <span className="model-select-label">TTS 模型</span>
+          <ToggleButton
+            options={ttsModelOptions[ttsModelMode]}
+            selectedOption={selectedTtsModel}
+            onSelect={handleTtsModelChange}
+          />
+        </div>
       </div>
 
       {files.length > 0 && (

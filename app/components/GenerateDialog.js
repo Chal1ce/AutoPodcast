@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from './button';
-import ResponseDisplay from './ResponseDisplay';
 
-const GenerateDialog = ({ topic, format, model }) => {
-  const [generatedText, setGeneratedText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
+const GenerateDialog = ({ topic, format, setGeneratedText, setIsLoading, model }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
   const handleGenerateScript = async () => {
     console.log("开始生成脚本");
     setIsLoading(true);
-    setGeneratedText('');
+    setGeneratedText([]);
     try {
       const requestBody = JSON.stringify({ topic, format });
       console.log("发送的请求体:", requestBody);
@@ -40,14 +36,9 @@ const GenerateDialog = ({ topic, format, model }) => {
   }
 
   return (
-    <div>
-      <div className="mt-6 mb-4 flex justify-end">
-        <Button onClick={handleGenerateScript} disabled={isLoading}>
-          {isLoading ? '正在生成中...' : '生成对话文案'}
-        </Button>
-      </div>
-      <ResponseDisplay generatedText={generatedText} isLoading={isLoading} setGeneratedText={setGeneratedText} />
-    </div>
+    <Button onClick={handleGenerateScript} className="w-full">
+      生成对话
+    </Button>
   );
 };
 

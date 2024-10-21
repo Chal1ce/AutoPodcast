@@ -9,7 +9,7 @@
 
 [![Contributors][contributors-shield]][contributors-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![License][license-shield]][license-url]
 
-[中文](docs/README_zh-cn.md) | [English](docs/README_en.md)
+[中文](README_zh-cn.md) | [English](README_en.md)
 
 </div>
 <!-- PROJECT LOGO -->
