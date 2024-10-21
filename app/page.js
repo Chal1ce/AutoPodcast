@@ -10,6 +10,20 @@ import ToggleButton from './components/ToggleButton';
 // 动态导入 FileUpload 组件
 const FileUpload = dynamic(() => import('./components/FileUpload'), { ssr: false });
 
+// 在文件顶部的 import 语句后添加
+const ttsModelModes = [
+  { value: 'api', label: 'API模式' },
+  { value: 'local', label: '本地模式' }
+];
+
+const ttsApiModels = [
+  { value: 'reecho', label: 'Reecho' }
+];
+
+const ttsLocalModels = [
+  { value: 'coquitts', label: 'Coqui TTS' }
+];
+
 export default function Home() {
   const [selectedOption, setSelectedOption] = useState('prompt');
   const [topic, setTopic] = useState('');
@@ -18,6 +32,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [modelMode, setModelMode] = useState('api');
   const [selectedModel, setSelectedModel] = useState('deepseek');
+  const [ttsModelMode, setTtsModelMode] = useState('api');
+  const [selectedTtsModel, setSelectedTtsModel] = useState('reecho');
 
   const options = [
     { value: 'prompt', label: '提示词生成播客音频' },
@@ -67,74 +83,107 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="max-w-md mx-auto space-y-8">
-        <div className="flex flex-col space-y-4">
-          <div className="w-full">
-            <select
-              value={selectedOption}
-              onChange={(e) => setSelectedOption(e.target.value)}
-              className="select-box w-full"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div className="flex justify-between items-start space-x-4">
-            <div className="flex flex-col items-start w-1/2">
-              <span className="model-select-label">选择生成对话文本的模式：</span>
-              <ToggleButton
-                options={modelModes}
-                selectedOption={modelMode}
-                onSelect={setModelMode}
-              />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <main className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200">AI 播客生成器</h1>
+        <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-8">
+          <div className="space-y-4">
+            <div className="w-full">
+              <label htmlFor="option-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">选择生成方式</label>
+              <select
+                id="option-select"
+                value={selectedOption}
+                onChange={(e) => setSelectedOption(e.target.value)}
+                className="select-box w-full"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
             
-            <div className="flex flex-col items-start w-1/2">
-              <span className="model-select-label">选择模型：</span>
-              <ToggleButton
-                options={modelMode === 'api' ? apiModels : localModels}
-                selectedOption={selectedModel}
-                onSelect={setSelectedModel}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <span className="model-select-label">生成对话文本模式</span>
+                <ToggleButton
+                  options={modelModes}
+                  selectedOption={modelMode}
+                  onSelect={setModelMode}
+                />
+              </div>
+              
+              <div>
+                <span className="model-select-label">选择模型</span>
+                <ToggleButton
+                  options={modelMode === 'api' ? apiModels : localModels}
+                  selectedOption={selectedModel}
+                  onSelect={setSelectedModel}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className="content-container">
-          {selectedOption === 'prompt' && (
-            <>
-              <Form 
-                topic={topic}
-                setTopic={setTopic}
-                format={format}
-                setFormat={setFormat}
-              />
-              <GenerateDialog 
-                topic={topic} 
-                format={format} 
-                setGeneratedText={setGeneratedText}
-                setIsLoading={setIsLoading}
-                model={getModelEndpoint(selectedModel, modelMode === 'local')}
-              />
-              <ResponseDisplay 
-                generatedText={generatedText}
-                isLoading={isLoading}
-                setGeneratedText={setGeneratedText}
-                onConfirm={handleConfirm}
-              />
-            </>
-          )}
           
-          {selectedOption === 'file' && 
-            <FileUpload 
-              model={getModelEndpoint(selectedModel, modelMode === 'local')}
-            />
-          }
+          <div className="content-container">
+            {selectedOption === 'prompt' && (
+              <>
+                <Form 
+                  topic={topic}
+                  setTopic={setTopic}
+                  format={format}
+                  setFormat={setFormat}
+                />
+                <div className="mt-6">
+                  <GenerateDialog 
+                    topic={topic} 
+                    format={format} 
+                    setGeneratedText={setGeneratedText}
+                    setIsLoading={setIsLoading}
+                    model={getModelEndpoint(selectedModel, modelMode === 'local')}
+                  />
+                </div>
+                <ResponseDisplay 
+                  generatedText={generatedText}
+                  isLoading={isLoading}
+                  setGeneratedText={setGeneratedText}
+                  ttsModelMode={ttsModelMode}
+                  selectedTtsModel={selectedTtsModel}
+                />
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                  <div>
+                    <span className="model-select-label">TTS 模式</span>
+                    <ToggleButton
+                      options={ttsModelModes}
+                      selectedOption={ttsModelMode}
+                      onSelect={(mode) => {
+                        setTtsModelMode(mode);
+                        setSelectedTtsModel(mode === 'api' ? 'reecho' : 'coquitts');
+                      }}
+                    />
+                  </div>
+                  
+                  <div>
+                    <span className="model-select-label">TTS 模型</span>
+                    <ToggleButton
+                      options={ttsModelMode === 'api' ? ttsApiModels : ttsLocalModels}
+                      selectedOption={selectedTtsModel}
+                      onSelect={setSelectedTtsModel}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+            
+            {selectedOption === 'file' && 
+              <FileUpload 
+                model={getModelEndpoint(selectedModel, modelMode === 'local')}
+                initialTtsModelMode={ttsModelMode}
+                initialSelectedTtsModel={selectedTtsModel}
+              />
+            }
+          </div>
         </div>
       </main>
     </div>

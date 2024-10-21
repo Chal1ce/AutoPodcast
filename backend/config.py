@@ -61,6 +61,9 @@ class yi:
 @dataclass
 class CoquiTTS:
     model: str = 'tts_models/multilingual/multi-dataset/xtts_v2'
-    output_path: str = 'output.wav'
-    speaker_wav: str = 'audio.wav'
+    output_path: str = 'output.wav' # 临时文件路径
+    speaker1_wav: str = 'test.wav' #主持人语音
+    speaker2_wav: str = 'test.wav' #专家语音
+    speaker3_wav: str = 'test.wav' #嘉宾语音 或 专家2
     language: str = 'zh-cn'
+    output_file: str = 'output.wav' # 最终合成文件的名称

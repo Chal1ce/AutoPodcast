@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const ResponseDisplay = ({ generatedText, isLoading, setGeneratedText}) => {
+const ResponseDisplay = ({ generatedText, isLoading, setGeneratedText, ttsModelMode, selectedTtsModel }) => {
   if (isLoading) {
     return <div className="mt-4">正在生成中...</div>;
   }
@@ -28,7 +28,16 @@ const ResponseDisplay = ({ generatedText, isLoading, setGeneratedText}) => {
     
     setIsSending(true);
     try {
-      const response = await fetch('http://127.0.0.1:8000/reecho/reecho', {
+      let url;
+      if (ttsModelMode === 'api' && selectedTtsModel === 'reecho') {
+        url = 'http://127.0.0.1:8000/reecho/reecho';
+      } else if (ttsModelMode === 'local' && selectedTtsModel === 'coquitts') {
+        url = 'http://127.0.0.1:8000/coqui_tts/tts_to_file';
+      } else {
+        throw new Error('不支持的 TTS 模式或模型');
+      }
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,11 +49,15 @@ const ResponseDisplay = ({ generatedText, isLoading, setGeneratedText}) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log('后端响应:', result);
+      let newAudioUrl;
+      if (ttsModelMode === 'api') {
+        const result = await response.json();
+        newAudioUrl = result; // Reecho API 直接返回音频 URL
+      } else {
+        // 对于 CoquiTTS，直接使用响应 URL
+        newAudioUrl = URL.createObjectURL(await response.blob());
+      }
       
-      // 直接使用后端返回的 audio_url
-      const newAudioUrl = result;
       console.log('音频URL:', newAudioUrl);
       setAudioUrl(newAudioUrl);
 
@@ -66,7 +79,7 @@ const ResponseDisplay = ({ generatedText, isLoading, setGeneratedText}) => {
     if (audioUrl) {
       const link = document.createElement('a');
       link.href = audioUrl;
-      link.download = '对话音频.mp3';
+      link.download = '对话音频.wav'; // 改为 .wav 扩展名
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -88,20 +101,22 @@ const ResponseDisplay = ({ generatedText, isLoading, setGeneratedText}) => {
 
   return (
     <div className="container space-y-6">
-      {generatedText.map((item, index) => (
-        <div key={index} className="border border-gray-300 rounded-md p-4">
-          <div className="mb-2 font-semibold bg-gray-100 p-2 rounded-t-md">
-            {item.speaker}：
+      <div className="max-h-96 overflow-y-auto border border-gray-300 rounded-md p-4 mb-4">
+        {generatedText.map((item, index) => (
+          <div key={index} className="mb-4 last:mb-0">
+            <div className="mb-2 font-semibold bg-gray-100 p-2 rounded-t-md">
+              {item.speaker}：
+            </div>
+            <textarea
+              className="textarea"
+              value={item.content}
+              onChange={(e) => handleContentChange(index, e.target.value)}
+            />
           </div>
-          <textarea
-            className="textarea"
-            value={item.content}
-            onChange={(e) => handleContentChange(index, e.target.value)}
-          />
-        </div>
-      ))}
+        ))}
+      </div>
       
-      <div className="button-group mt-8"> {/* 增加上边距 */}
+      <div className="button-group mt-4">
         <button 
           className={`btn ${isSending ? 'opacity-50 cursor-not-allowed' : ''}`}
           onClick={handleConfirm}

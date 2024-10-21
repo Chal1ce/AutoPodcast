@@ -57,6 +57,7 @@ def get_audio_url(session_id: str, max_retries=5, retry_delay=30):
 
 @reecho_router.post("/reecho")
 async def reecho(text: list[dict]):
+    print(f"Received text: {text}")  # 添加这行来打印接收到的数据
     url = "https://v1.reecho.cn/api/tts/generate"
 
     contents = []
@@ -91,6 +92,7 @@ async def reecho(text: list[dict]):
     try:
         response = requests.request("POST", url, headers=headers, data=payload)
         response.raise_for_status()
+        print(response.status_code)
         
         if response.text:
             session_id = response.json()['data']['id']
