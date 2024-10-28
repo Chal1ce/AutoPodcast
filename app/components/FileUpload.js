@@ -17,17 +17,37 @@ export default function FileUpload({ model, initialTtsModelMode, initialSelected
   const [isSending, setIsSending] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const audioRef = useRef(null);
+  const fileInputRef = useRef(null);
 
-  const isPDF = (file) => {
-    return file.type === "application/pdf";
+  const isValidFileType = (file) => {
+    const validTypes = {
+      'application/pdf': true,
+      'text/plain': true,
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': true,
+      'application/msword': true
+    };
+    return validTypes[file.type] === true;
+  };
+
+  const getFileTypeError = (file) => {
+    if (!file || !file.type) return '无法识别文件类型';
+    switch (file.type) {
+      case 'application/pdf':
+      case 'text/plain':
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      case 'application/msword':
+        return null;
+      default:
+        return '请上传 PDF、TXT 或 Word 文件';
+    }
   };
 
   const handleFiles = (newFiles) => {
-    const pdfFiles = newFiles.filter(file => isPDF(file));
-    const nonPdfFiles = newFiles.filter(file => !isPDF(file));
+    const pdfFiles = newFiles.filter(file => isValidFileType(file));
+    const nonPdfFiles = newFiles.filter(file => !isValidFileType(file));
 
     if (nonPdfFiles.length > 0) {
-      setError(`以下文件不是PDF格式，已被忽略：${nonPdfFiles.map(f => f.name).join(', ')}`);
+      setError(`以下文件格式不支持：${nonPdfFiles.map(f => f.name).join(', ')}`);
       setTimeout(() => setError(""), 5000);
     }
 
@@ -40,9 +60,21 @@ export default function FileUpload({ model, initialTtsModelMode, initialSelected
     handleFiles(droppedFiles);
   };
 
-  const handleChange = (e) => {
+  const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    handleFiles(selectedFiles);
+    
+    // 检查文件类型
+    const invalidFiles = selectedFiles.filter(file => !isValidFileType(file));
+    if (invalidFiles.length > 0) {
+      const errorMessages = invalidFiles.map(file => 
+        `文件 "${file.name}" 格式不支持。${getFileTypeError(file)}`
+      );
+      setError(errorMessages.join('\n'));
+      return;
+    }
+
+    setFiles(selectedFiles);
+    setError('');
   };
 
   const removeFile = (index) => {
@@ -231,17 +263,18 @@ export default function FileUpload({ model, initialTtsModelMode, initialSelected
         className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
+        onClick={() => fileInputRef.current?.click()} // 添加点击处理
       >
         <input
           type="file"
-          onChange={handleChange}
-          className="hidden"
-          id="fileInput"
           multiple
-          accept=".pdf"
+          accept=".pdf,.txt,.doc,.docx,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          onChange={handleFileChange}
+          className="hidden"
+          ref={fileInputRef}
         />
-        <label htmlFor="fileInput" className="cursor-pointer text-lg font-semibold text-gray-700 hover:text-gray-900">
-          拖拽PDF文件到这里或点击选择文件
+        <label className="cursor-pointer text-lg font-semibold text-gray-700 hover:text-gray-900">
+          拖拽文件到这里或点击选择文件
         </label>
       </div>
       
